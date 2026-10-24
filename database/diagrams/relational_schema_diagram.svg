@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1030.6" height="1314" viewBox="0 0 1030.6 1314">
+<rect x="0" y="0" width="1030.6" height="1314" fill="#ffffff"/>
+<defs><marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9" fill="none" stroke="#3d3d3a" stroke-width="1.6"/></marker></defs>
+<path d="M 238.0 176.0 L 760.5999999999999 176.0 L 760.5999999999999 90.0 L 153.8 90.0" fill="none" stroke="#5f5e5a" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+<path d="M 266.2 520.0 L 775.5999999999999 520.0 L 775.5999999999999 176.0 L 153.8 176.0" fill="none" stroke="#5f5e5a" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+<path d="M 283.4 606.0 L 790.5999999999999 606.0 L 790.5999999999999 176.0 L 153.8 176.0" fill="none" stroke="#5f5e5a" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+<path d="M 366.2 778.0 L 805.5999999999999 778.0 L 805.5999999999999 348.0 L 191.4 348.0" fill="none" stroke="#5f5e5a" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+<path d="M 538.4 778.0 L 820.5999999999999 778.0 L 820.5999999999999 434.0 L 191.4 434.0" fill="none" stroke="#5f5e5a" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+<path d="M 283.4 864.0 L 835.5999999999999 864.0 L 835.5999999999999 262.0 L 172.60000000000002 262.0" fill="none" stroke="#5f5e5a" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+<path d="M 404.0 864.0 L 850.5999999999999 864.0 L 850.5999999999999 434.0 L 191.4 434.0" fill="none" stroke="#5f5e5a" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+<path d="M 180.0 950.0 L 865.5999999999999 950.0 L 865.5999999999999 520.0 L 182.0 520.0" fill="none" stroke="#5f5e5a" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+<path d="M 309.4 950.0 L 880.5999999999999 950.0 L 880.5999999999999 434.0 L 191.4 434.0" fill="none" stroke="#5f5e5a" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+<path d="M 282.6 1036.0 L 895.5999999999999 1036.0 L 895.5999999999999 520.0 L 182.0 520.0" fill="none" stroke="#5f5e5a" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+<path d="M 254.4 1122.0 L 910.5999999999999 1122.0 L 910.5999999999999 606.0 L 182.0 606.0" fill="none" stroke="#5f5e5a" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+<path d="M 349.2 1122.0 L 925.5999999999999 1122.0 L 925.5999999999999 176.0 L 153.8 176.0" fill="none" stroke="#5f5e5a" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+<path d="M 301.4 1208.0 L 940.5999999999999 1208.0 L 940.5999999999999 606.0 L 182.0 606.0" fill="none" stroke="#5f5e5a" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+<path d="M 422.0 1208.0 L 955.5999999999999 1208.0 L 955.5999999999999 692.0 L 191.4 692.0" fill="none" stroke="#5f5e5a" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+<text x="60" y="44" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#2c2c2a">roles</text>
+<rect x="60" y="70" width="91.8" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="105.9" y="90.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Role_id</text>
+<line x1="73.0" y1="99.0" x2="138.8" y2="99.0" stroke="#2c2c2a" stroke-width="1.3"/>
+<rect x="151.8" y="70" width="103.39999999999999" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="203.5" y="90.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Role_name</text>
+<text x="60" y="130" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#2c2c2a">users</text>
+<rect x="60" y="156" width="91.8" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="105.9" y="176.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">User_id</text>
+<line x1="73.0" y1="185.0" x2="138.8" y2="185.0" stroke="#2c2c2a" stroke-width="1.3"/>
+<rect x="151.8" y="156" width="86.19999999999999" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="194.9" y="176.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Role_id</text>
+<rect x="238.0" y="156" width="70" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="273.0" y="176.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Email</text>
+<rect x="308.0" y="156" width="137.8" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="376.9" y="176.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Password_hash</text>
+<text x="60" y="216" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#2c2c2a">vendors</text>
+<rect x="60" y="242" width="110.60000000000001" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="115.30000000000001" y="262.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Vendor_id</text>
+<line x1="73.0" y1="271.0" x2="157.60000000000002" y2="271.0" stroke="#2c2c2a" stroke-width="1.3"/>
+<rect x="170.60000000000002" y="242" width="70" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="205.60000000000002" y="262.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Name</text>
+<text x="60" y="302" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#2c2c2a">traditional_materials</text>
+<rect x="60" y="328" width="129.4" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="124.7" y="348.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Material_id</text>
+<line x1="73.0" y1="357.0" x2="176.4" y2="357.0" stroke="#2c2c2a" stroke-width="1.3"/>
+<rect x="189.4" y="328" width="70" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="224.4" y="348.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Name</text>
+<text x="60" y="388" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#2c2c2a">green_materials</text>
+<rect x="60" y="414" width="129.4" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="124.7" y="434.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Material_id</text>
+<line x1="73.0" y1="443.0" x2="176.4" y2="443.0" stroke="#2c2c2a" stroke-width="1.3"/>
+<rect x="189.4" y="414" width="70" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="224.4" y="434.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Name</text>
+<rect x="259.4" y="414" width="129.2" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="324.0" y="434.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Co2_per_unit</text>
+<rect x="388.59999999999997" y="414" width="137.8" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="457.5" y="434.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Cost_per_unit</text>
+<text x="60" y="474" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#2c2c2a">projects</text>
+<rect x="60" y="500" width="120.0" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="120.0" y="520.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Project_id</text>
+<line x1="73.0" y1="529.0" x2="167.0" y2="529.0" stroke="#2c2c2a" stroke-width="1.3"/>
+<rect x="180.0" y="500" width="86.19999999999999" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="223.1" y="520.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">User_id</text>
+<rect x="266.2" y="500" width="70" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="301.2" y="520.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Title</text>
+<rect x="336.2" y="500" width="70" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="371.2" y="520.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Style</text>
+<rect x="406.2" y="500" width="77.6" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="445.0" y="520.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Budget</text>
+<text x="60" y="560" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#2c2c2a">furniture_listings</text>
+<rect x="60" y="586" width="120.0" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="120.0" y="606.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Listing_id</text>
+<line x1="73.0" y1="615.0" x2="167.0" y2="615.0" stroke="#2c2c2a" stroke-width="1.3"/>
+<rect x="180.0" y="586" width="103.39999999999999" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="231.7" y="606.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Seller_id</text>
+<rect x="283.4" y="586" width="77.6" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="322.2" y="606.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Status</text>
+<text x="60" y="646" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#2c2c2a">junkyards</text>
+<rect x="60" y="672" width="129.4" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="124.7" y="692.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Junkyard_id</text>
+<line x1="73.0" y1="701.0" x2="176.4" y2="701.0" stroke="#2c2c2a" stroke-width="1.3"/>
+<rect x="189.4" y="672" width="70" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="224.4" y="692.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Name</text>
+<text x="60" y="732" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#2c2c2a">material_alternatives</text>
+<rect x="60" y="758" width="82.4" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="101.2" y="778.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Alt_id</text>
+<line x1="73.0" y1="787.0" x2="129.4" y2="787.0" stroke="#2c2c2a" stroke-width="1.3"/>
+<rect x="142.4" y="758" width="223.79999999999998" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="254.3" y="778.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Traditional_material_id</text>
+<rect x="366.2" y="758" width="172.2" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="452.29999999999995" y="778.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Green_material_id</text>
+<rect x="538.4" y="758" width="172.2" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="624.5" y="778.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Co2_reduction_pct</text>
+<text x="60" y="818" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#2c2c2a">vendor_listings</text>
+<rect x="60" y="844" width="120.0" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="120.0" y="864.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Listing_id</text>
+<line x1="73.0" y1="873.0" x2="167.0" y2="873.0" stroke="#2c2c2a" stroke-width="1.3"/>
+<rect x="180.0" y="844" width="103.39999999999999" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="231.7" y="864.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Vendor_id</text>
+<rect x="283.4" y="844" width="120.6" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="343.7" y="864.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Material_id</text>
+<rect x="404.0" y="844" width="70" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="439.0" y="864.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Price</text>
+<text x="60" y="904" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#2c2c2a">project_materials</text>
+<rect x="60" y="930" width="120.0" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="120.0" y="950.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Project_id</text>
+<line x1="73.0" y1="959.0" x2="167.0" y2="959.0" stroke="#2c2c2a" stroke-width="1.3"/>
+<rect x="180.0" y="930" width="129.4" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="244.7" y="950.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Material_id</text>
+<line x1="193.0" y1="959.0" x2="296.4" y2="959.0" stroke="#2c2c2a" stroke-width="1.3"/>
+<rect x="309.4" y="930" width="94.8" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="356.79999999999995" y="950.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Quantity</text>
+<text x="60" y="990" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#2c2c2a">carbon_reports</text>
+<rect x="60" y="1016" width="110.60000000000001" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="115.30000000000001" y="1036.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Report_id</text>
+<line x1="73.0" y1="1045.0" x2="157.60000000000002" y2="1045.0" stroke="#2c2c2a" stroke-width="1.3"/>
+<rect x="170.60000000000002" y="1016" width="112.0" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="226.60000000000002" y="1036.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Project_id</text>
+<rect x="282.6" y="1016" width="155.0" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="360.1" y="1036.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Total_co2_saved</text>
+<text x="60" y="1076" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#2c2c2a">furniture_transactions</text>
+<rect x="60" y="1102" width="82.4" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="101.2" y="1122.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Txn_id</text>
+<line x1="73.0" y1="1131.0" x2="129.4" y2="1131.0" stroke="#2c2c2a" stroke-width="1.3"/>
+<rect x="142.4" y="1102" width="112.0" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="198.4" y="1122.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Listing_id</text>
+<rect x="254.4" y="1102" width="94.8" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="301.8" y="1122.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Buyer_id</text>
+<text x="60" y="1162" font-family="Arial, sans-serif" font-size="17" font-weight="700" fill="#2c2c2a">junkyard_referrals</text>
+<rect x="60" y="1188" width="129.4" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="124.7" y="1208.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Referral_id</text>
+<line x1="73.0" y1="1217.0" x2="176.4" y2="1217.0" stroke="#2c2c2a" stroke-width="1.3"/>
+<rect x="189.4" y="1188" width="112.0" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="245.4" y="1208.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Listing_id</text>
+<rect x="301.4" y="1188" width="120.6" height="40" fill="#f1efe8" stroke="#5f5e5a" stroke-width="1.2"/>
+<text x="361.7" y="1208.0" font-family="Arial, sans-serif" font-size="14.5" fill="#2c2c2a" text-anchor="middle" dominant-baseline="central">Junkyard_id</text>
+</svg>
