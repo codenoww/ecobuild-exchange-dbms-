@@ -26,6 +26,7 @@ ALTER TABLE furniture_listings
 ALTER TABLE vendor_listings
     DROP COLUMN IF EXISTS is_live_synced;
 
--- Example of a real DROP TABLE (not the schema-reset kind): an early
--- prototype table that was replaced by material_alternatives + green_materials
+-- Example of DROP TABLE: create a throwaway mapping table, then remove it
+-- (stands in for an early prototype table replaced by material_alternatives)
+CREATE TABLE legacy_material_mapping (old_name VARCHAR(100), new_material_id INT);
 DROP TABLE IF EXISTS legacy_material_mapping;

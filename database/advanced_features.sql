@@ -24,7 +24,7 @@
 -- So the implied traditional baseline per unit is:
 --     baseline_co2 = green_co2 / (1 - reduction_pct/100)
 -- and the CO2 saved per unit is (baseline_co2 - green_co2).
--- This upserts one row per project into carbon_reports.
+-- This inserts a new carbon_reports row on every call (a history per project).
 -- ------------------------------------------------------------
 CREATE OR REPLACE FUNCTION fn_calculate_carbon_savings(p_project_id INT)
 RETURNS TABLE(co2_saved NUMERIC, cost NUMERIC) AS $$
@@ -85,7 +85,7 @@ FOR EACH ROW EXECUTE FUNCTION trg_fn_recalc_carbon();
 -- ------------------------------------------------------------
 -- FEATURE: Trigger — data-integrity guard. If a furniture listing's
 -- status is ever set to 'Referred' without a matching row already
--- in junkyard_referrals, auto-create one (round-robin: lowest
+-- in junkyard_referrals, auto-create one (always the lowest
 -- junkyard_id). Prevents the "Referred but no referral record"
 -- inconsistent state the earlier manual seed data could have caused.
 -- ------------------------------------------------------------
