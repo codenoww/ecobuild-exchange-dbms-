@@ -1,4 +1,3 @@
-
 export const dynamic = "force-dynamic";
 
 import { NextResponse } from "next/server";
@@ -9,10 +8,7 @@ export async function GET() {
   const session = getSessionFromCookies();
 
   if (!session) {
-    return NextResponse.json(
-      { error: "Login required" },
-      { status: 401 }
-    );
+    return NextResponse.json({ error: "Login required" }, { status: 401 });
   }
 
   if (session.role !== "Vendor") {
@@ -49,10 +45,7 @@ export async function POST(request) {
   const session = getSessionFromCookies();
 
   if (!session) {
-    return NextResponse.json(
-      { error: "Login required" },
-      { status: 401 }
-    );
+    return NextResponse.json({ error: "Login required" }, { status: 401 });
   }
 
   if (session.role !== "Vendor") {
@@ -66,13 +59,44 @@ export async function POST(request) {
     const body = await request.json();
     const { material_id, price, url } = body;
 
+    const numericPrice = Number(price);
+    const numericMaterialId = Number(material_id);
+
     if (
-      !Number.isInteger(Number(material_id)) ||
-      !Number.isFinite(Number(price)) ||
-      Number(price) < 0
+      !Number.isInteger(numericMaterialId) ||
+      numericMaterialId <= 0 ||
+      !Number.isFinite(numericPrice) ||
+      numericPrice <= 0
     ) {
       return NextResponse.json(
-        { error: "Valid material_id and non-negative price are required" },
+        { error: "A valid material_id and positive price are required" },
+        { status: 400 }
+      );
+    }
+
+    const profile = await query(
+      `INSERT INTO vendors (name, website, location, owner_user_id)
+       SELECT
+         COALESCE(NULLIF(TRIM($2), ''), u.name),
+         NULLIF(TRIM($3), ''),
+         NULLIF(TRIM($4), ''),
+         u.user_id
+       FROM users u
+       WHERE u.user_id = $1
+       ON CONFLICT (owner_user_id)
+       DO UPDATE SET owner_user_id = EXCLUDED.owner_user_id
+       RETURNING vendor_id`,
+      [
+        session.userId,
+        body.name || "",
+        body.website || "",
+        body.location || ""
+      ]
+    );
+
+    if (profile.rowCount === 0) {
+      return NextResponse.json(
+        { error: "Unable to create vendor profile" },
         { status: 400 }
       );
     }
@@ -85,18 +109,11 @@ export async function POST(request) {
        RETURNING listing_id, vendor_id, material_id, price, url, last_synced`,
       [
         session.userId,
-        Number(material_id),
-        Number(price),
+        numericMaterialId,
+        numericPrice,
         url ? String(url).trim() : null
       ]
     );
-
-    if (result.rowCount === 0) {
-      return NextResponse.json(
-        { error: "No vendor profile is linked to your account" },
-        { status: 403 }
-      );
-    }
 
     return NextResponse.json(
       { message: "Vendor listing created", listing: result.rows[0] },
