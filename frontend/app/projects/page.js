@@ -210,7 +210,7 @@ export default function ProjectsPage() {
                       key={material.material_id}
                       value={material.material_id}
                     >
-                      {material.name} ({material.category})
+                      {material.green_material} (Alternative to {material.traditional_material})
                     </option>
                   ))}
                 </select>
