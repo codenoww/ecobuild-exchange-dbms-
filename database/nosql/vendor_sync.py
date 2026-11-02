@@ -2,12 +2,13 @@
 EcoBuild Exchange — Vendor listing sync pipeline (NoSQL -> SQL)
 
 Real pipeline shape:
-  1. A scheduled scraper/fetch job pulls product listings from real vendor
-     sites (IndiaMART, TradeIndia, vendor pages) and writes them AS-IS into
-     a MongoDB collection `raw_vendor_listings` — no cleanup, no schema
-     enforcement, because every source site structures its data differently
-     (see raw_vendor_listings_seed.json for real examples: missing prices,
+  1. Previously collected vendor product listings from sources such as
+     IndiaMART and TradeIndia are stored AS-IS in a MongoDB collection
+     `raw_vendor_listings` — no cleanup, no schema enforcement, because
+     every source site structures its data differently (see
+     raw_vendor_listings_seed.json for collected examples: missing prices,
      inconsistent units, mismatched metadata tags).
+
   2. This script reads that raw collection, runs a MongoDB aggregation to
      summarize it, then normalizes + matches each raw listing to a
      canonical green_materials row, and emits the clean SQL rows that the
