@@ -23,7 +23,8 @@ RETURNING project_id, title;
 -- ------------------------------------------------------------
 UPDATE vendor_listings
 SET price = 7.00, last_synced = CURRENT_TIMESTAMP
-WHERE vendor_id = 1 AND material_id = 1
+WHERE vendor_id = (SELECT vendor_id FROM vendors WHERE name = 'Verma Construction Company')
+  AND material_id = 1
 RETURNING listing_id, price;
 
 -- UPDATE — mark a furniture listing as sold after a transaction
@@ -36,7 +37,8 @@ RETURNING listing_id, status;
 -- 3. DELETE — remove a stale vendor listing (duplicate/expired offer)
 -- ------------------------------------------------------------
 DELETE FROM vendor_listings
-WHERE vendor_id = 3 AND material_id = 1
+WHERE vendor_id = (SELECT vendor_id FROM vendors WHERE name = 'Laxmi Bricks Co.')
+  AND material_id = 1
 RETURNING listing_id;
 
 -- ------------------------------------------------------------
@@ -68,7 +70,7 @@ JOIN vendors v           ON v.vendor_id   = vl.vendor_id
 ORDER BY gm.name, vl.price ASC;
 
 -- ------------------------------------------------------------
--- 6. GROUP BY + aggregate functions — total CO2 saved and spend per project
+-- 6. GROUP BY + aggregate functions — total material units and distinct materials per project
 -- ------------------------------------------------------------
 SELECT
     p.title,
@@ -119,7 +121,7 @@ WHERE cost_per_unit < (
 ORDER BY cost_per_unit;
 
 -- ------------------------------------------------------------
--- 10. Subquery (correlated) — projects whose carbon savings exceed
+-- 10. Subquery (non-correlated) — projects whose carbon savings exceed
 --     the average savings across all projects
 -- ------------------------------------------------------------
 SELECT p.title, cr.total_co2_saved
@@ -148,3 +150,14 @@ SELECT name, sustainability_score, co2_per_unit
 FROM green_materials
 ORDER BY sustainability_score DESC
 LIMIT 3;
+
+-- ------------------------------------------------------------
+-- 13. Subquery (correlated) — projects that use any material in quantity above 500
+--     The inner query refers to p.project_id from the outer query.
+-- ------------------------------------------------------------
+SELECT p.title
+FROM projects p
+WHERE EXISTS (
+    SELECT 1 FROM project_materials pm
+    WHERE pm.project_id = p.project_id AND pm.quantity > 500
+);
