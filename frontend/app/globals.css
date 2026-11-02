@@ -1,0 +1,32 @@
+/* Intentionally plain — functionality over design, per project build order */
+* { box-sizing: border-box; }
+body {
+  font-family: system-ui, sans-serif;
+  margin: 0;
+  color: #1a1a1a;
+  background: #fafafa;
+}
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background: #1f4d3a;
+  color: white;
+}
+.site-header a { color: white; text-decoration: none; margin-left: 16px; }
+.brand { font-weight: bold; margin-left: 0; font-size: 1.1rem; }
+main { padding: 24px; max-width: 900px; margin: 0 auto; }
+table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+th, td { text-align: left; padding: 8px; border-bottom: 1px solid #ddd; }
+th { background: #eee; }
+form { display: flex; flex-direction: column; gap: 10px; max-width: 360px; }
+input, select { padding: 8px; font-size: 1rem; }
+button { padding: 8px 16px; background: #1f4d3a; color: white; border: none; cursor: pointer; }
+button:hover { background: #163a2b; }
+.error { color: #b00020; }
+.success { color: #1f4d3a; }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; }
+.tag.active { background: #d2f0d2; color: #1f4d3a; }
+.tag.sold { background: #e0e0e0; color: #444; }
+.tag.referred { background: #ffe0b0; color: #8a5300; }

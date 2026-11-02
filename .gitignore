@@ -1,0 +1,24 @@
+# Environment variables and secrets
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules/
+.venv/
+venv/
+
+# Python generated files
+__pycache__/
+*.py[cod]
+
+# Next.js
+.next/
+out/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Local database backups
+ecobuild_exchange_backup.sql

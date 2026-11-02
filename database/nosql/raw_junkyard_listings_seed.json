@@ -1,0 +1,60 @@
+[
+  {
+    "source_site": "business.google.com",
+    "source_url": "https://business.google.com/v/bangalore-scraper-llp/014229194856629286435/939e/_/lp/3450531853259456417/",
+    "name": "Bangalore Scraper LLP",
+    "city": "Bengaluru",
+    "address": null,
+    "phone": "+91 96634 75568",
+    "services": [
+      "Office dismantling",
+      "Office furniture buying",
+      "Scrap buying (AC, UPS, DG sets, electrical panels and cables, IT assets)"
+    ],
+    "scraped_at": "2026-10-24T13:00:00Z"
+  },
+  {
+    "source_site": "business.google.com",
+    "source_url": "https://business.google.com/v/agk-enterprises/017355737471554518282/6db1/_/lp/8406137337732508785/",
+    "name": "AGK Enterprises",
+    "city": "Bengaluru",
+    "address": null,
+    "phone": "074834 35016",
+    "services": [
+      "Scrap metal dealer",
+      "Buys all types of office furniture",
+      "Office dismantling items",
+      "Laptops, ACs, UPS batteries, generators"
+    ],
+    "scraped_at": "2026-10-24T13:00:00Z"
+  },
+  {
+    "source_site": "business.google.com",
+    "source_url": "https://business.google.com/v/ggr-second-hand-office-furniture/02524646511656315813/fc1a/_/lp/5966073546093510113/",
+    "name": "Global Green Recyclers",
+    "city": "New Delhi",
+    "address": null,
+    "phone": "098106 78452",
+    "services": [
+      "Used office furniture (chairs, tables, storage, workstations, partitions)",
+      "E-waste and scrap"
+    ],
+    "scraped_at": "2026-10-24T13:00:00Z"
+  },
+  {
+    "source_site": "indiamart.com",
+    "source_url": "https://m.indiamart.com/scrap-deal",
+    "name": "Scrap Deal",
+    "city": "Kolkata",
+    "address": null,
+    "phone": "+91 80476 78707",
+    "services": [
+      "Office furniture",
+      "Wooden chairs",
+      "Refrigerators",
+      "Metal scrap"
+    ],
+    "scraped_at": "2026-10-24T13:00:00Z",
+    "data_quality_note": "Outside Bengaluru; kept raw but filtered out by the pipeline's service-area rule."
+  }
+]

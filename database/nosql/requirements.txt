@@ -1,0 +1,3 @@
+pymongo>=4.6
+mongomock>=4.1
+certifi>=2024.2.2
