@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -14,53 +15,109 @@ export default function MarketplacePage() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
 
-  const loadListings = () => {
-    fetch("/api/furniture")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.error) setError(data.error);
-        else setListings(data.listings);
-      })
-      .catch(() => setError("Failed to load listings"))
-      .finally(() => setLoading(false));
+  const loadListings = async (searchTerm = "") => {
+    setLoading(true);
+    setError("");
+
+    try {
+      const params = new URLSearchParams();
+
+      if (searchTerm.trim()) {
+        params.set("q", searchTerm.trim());
+      }
+
+      const response = await fetch(
+        `/api/furniture${params.toString() ? `?${params}` : ""}`
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Failed to load listings");
+      } else {
+        setListings(data.listings || []);
+      }
+    } catch {
+      setError("Failed to load listings");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     loadListings();
+
     fetch("/api/auth/session")
       .then((res) => res.json())
-      .then((data) => setUser(data.user));
+      .then((data) => setUser(data.user))
+      .catch(() => setUser(null));
   }, []);
+
+  async function handleSearch(e) {
+    e.preventDefault();
+    await loadListings(search);
+  }
 
   async function handleBuy(listingId, price) {
     setMessage("");
     setError("");
+
     const res = await fetch(`/api/furniture/${listingId}/buy`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ price }),
     });
+
     const data = await res.json();
+
     if (!res.ok) {
       setError(data.error || "Purchase failed");
       return;
     }
+
     setMessage("Purchase successful.");
-    loadListings();
+    await loadListings(search);
+  }
+
+  async function clearSearch() {
+    setSearch("");
+    await loadListings("");
   }
 
   return (
-    <div>
+    <main className="page-container">
       <h1>Furniture Marketplace</h1>
+
       <p>
-        Unsold listings are automatically referred to a junkyard partner 90
-        days after posting.
+        Unsold listings are automatically referred to a junkyard
+        partner 90 days after posting.
       </p>
-      {loading && <p>Loading…</p>}
+
+      <form onSubmit={handleSearch}>
+        <input
+          type="search"
+          placeholder="Search furniture by title or category..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+
+        <button type="submit">Search</button>
+
+        <button type="button" onClick={clearSearch}>
+          Clear
+        </button>
+      </form>
+
       {error && <p className="error">{error}</p>}
       {message && <p className="success">{message}</p>}
-      {!loading && (
+
+      {loading ? (
+        <p>Loading listings...</p>
+      ) : listings.length === 0 ? (
+        <p>No furniture listings found.</p>
+      ) : (
         <table>
           <thead>
             <tr>
@@ -73,6 +130,7 @@ export default function MarketplacePage() {
               <th></th>
             </tr>
           </thead>
+
           <tbody>
             {listings.map((l) => (
               <tr key={l.listing_id}>
@@ -81,7 +139,9 @@ export default function MarketplacePage() {
                 <td>{l.condition}</td>
                 <td>₹{l.price}</td>
                 <td>
-                  <span className={tagClass(l.status)}>{l.status}</span>
+                  <span className={tagClass(l.status)}>
+                    {l.status}
+                  </span>
                 </td>
                 <td>{l.seller_name}</td>
                 <td>
@@ -90,6 +150,7 @@ export default function MarketplacePage() {
                       Buy
                     </button>
                   )}
+
                   {l.status === "Active" && !user && (
                     <a href="/login">Log in to buy</a>
                   )}
@@ -99,6 +160,6 @@ export default function MarketplacePage() {
           </tbody>
         </table>
       )}
-    </div>
+    </main>
   );
 }
