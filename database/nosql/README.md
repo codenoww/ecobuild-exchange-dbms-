@@ -8,7 +8,7 @@ guessing; a document store holds it as-is.
 
 ## Files
 
-- `raw_vendor_listings_seed.json` — 99 real product listings, pulled live from IndiaMART/TradeIndia (fly ash, bamboo flooring, CSEB, hempcrete, plus a few deliberately-unmatched ones like a block-making machine and plain TMT rebar)
+- `raw_vendor_listings_seed.json` — 99 real product listings, collected snapshot from IndiaMART/TradeIndia (fly ash, bamboo flooring, CSEB, hempcrete, plus a few deliberately-unmatched ones like a block-making machine and plain TMT rebar)
 - `raw_junkyard_listings_seed.json` — 4 real scrap/furniture buyers from Google Business and IndiaMART pages; only the Bengaluru ones are kept by the pipeline
   and TradeIndia on 2026-10-23 for fly ash bricks, CSEB (compressed stabilized earth
   blocks), and hemp building material. Kept exactly as scraped, including a
