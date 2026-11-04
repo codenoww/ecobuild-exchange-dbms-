@@ -15,9 +15,10 @@ export default function RootLayout({ children }) {
             <a href="/materials">Materials</a>
             <a href="/marketplace">Marketplace</a>
             <a href="/projects">My Projects</a>
+            <a href="/admin">Admin Dashboard</a>
+            <a href="/vendor">Vendor Dashboard</a>
             <a href="/login">Login</a>
             <a href="/register">Register</a>
-            <a href="/admin">Admin</a>
           </nav>
         </header>
         <main>{children}</main>
