@@ -19,12 +19,12 @@ SELECT
     gm.sustainability_score,
     ROUND(0.5 * ma.co2_reduction_pct
         + 0.3 * gm.sustainability_score * 10
-        - 0.2 * ma.cost_delta_pct, 2)                      AS score,
+        - 0.2 * COALESCE(ma.cost_delta_pct, 0), 2)                      AS score,
     RANK() OVER (
         PARTITION BY tm.material_id
         ORDER BY (0.5 * ma.co2_reduction_pct
                 + 0.3 * gm.sustainability_score * 10
-                - 0.2 * ma.cost_delta_pct) DESC
+                - 0.2 * COALESCE(ma.cost_delta_pct, 0)) DESC
     )                                                       AS rank_within_material
 FROM material_alternatives ma
 JOIN traditional_materials tm ON tm.material_id = ma.traditional_material_id
