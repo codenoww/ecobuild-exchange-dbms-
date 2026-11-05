@@ -57,3 +57,37 @@ export function getSessionFromCookies() {
 }
 
 export const SESSION_COOKIE_NAME = COOKIE_NAME;
+
+// Check whether the current session has one of the allowed roles.
+export function requireRole(allowed) {
+  const session = getSessionFromCookies();
+
+  // User is not logged in.
+  if (!session) {
+    return {
+      session: null,
+      error: "Login required",
+      status: 401,
+    };
+  }
+
+  const allowedRoles = Array.isArray(allowed)
+    ? allowed
+    : [allowed];
+
+  // User is logged in but does not have permission.
+  if (!allowedRoles.includes(session.role)) {
+    return {
+      session: null,
+      error: "Forbidden: insufficient permissions",
+      status: 403,
+    };
+  }
+
+  // User is authenticated and authorized.
+  return {
+    session,
+    error: null,
+    status: 200,
+  };
+}

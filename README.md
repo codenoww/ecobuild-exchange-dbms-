@@ -39,7 +39,13 @@ frontend/
 
 **Full project documentation** (objectives, functional requirements, database choice justification, data dictionary, system architecture, testing results, conclusion): see the `docs/` folder (PDF added at submission).
 
-### Current schema (14 tables, PostgreSQL)
+### Database setup order
+
+1. Load `database/schema.sql` to create the main tables.
+2. Load `database/seed_data.sql` and the required project SQL data files.
+3. Run `database/migrations/001_vendor_owner.sql` **after the main schema** to add vendor ownership and link vendor profiles to user accounts.
+
+## Current schema (14 tables, PostgreSQL)
 `roles, users, projects, green_materials, traditional_materials, material_alternatives, vendors, vendor_listings, project_materials, carbon_reports, furniture_listings, furniture_transactions, junkyards, junkyard_referrals`
 
 Includes: PK/FK constraints, CHECK constraints, 6 indexes (incl. a GIN full-text index), and 2 views (`vendor_price_comparison`, `listings_nearing_expiry`).
