@@ -33,7 +33,7 @@ export default function ProjectsPage() {
 
   async function loadMaterials() {
     try {
-      const res = await fetch("/api/materials");
+      const res = await fetch("/api/materials?list=green");
       const data = await res.json();
 
       if (res.ok) {
@@ -210,7 +210,7 @@ export default function ProjectsPage() {
                       key={material.material_id}
                       value={material.material_id}
                     >
-                      {material.green_material} (Alternative to {material.traditional_material})
+                      {material.name} ({material.category})
                     </option>
                   ))}
                 </select>
