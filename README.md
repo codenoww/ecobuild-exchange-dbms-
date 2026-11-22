@@ -191,7 +191,7 @@ See `docs/testing_log.md` for test cases and results: auth 401/403 checks, dupli
 
 ## Team
 
-| Member | SRN | Responsibilities |
-|---|---|---|
-| Aryan Singh | PES1UG24CS086 | _to be filled_ |
-| Anushka Kishore | PES1UG24CS074 | _to be filled_ |
+| Member | SRN |
+|---|---|
+| Aryan Singh | PES1UG24CS086 |
+| Anushka Kishore | PES1UG24CS074 |
