@@ -193,5 +193,5 @@ See `docs/testing_log.md` for test cases and results: auth 401/403 checks, dupli
 
 | Member | SRN | Responsibilities |
 |---|---|---|
-| _Name 1_ | _SRN_ | _e.g. schema design, advanced SQL, NoSQL pipeline_ |
-| _Name 2_ | _SRN_ | _e.g. Next.js UI, API routes, auth, testing_ |
+| Aryan Singh | PES1UG24CS086 | _to be filled_ |
+| Anushka Kishore | PES1UG24CS074 | _to be filled_ |
