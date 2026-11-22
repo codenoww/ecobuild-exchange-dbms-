@@ -1,0 +1,459 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>EcoBuild Exchange – Project Report</title>
+<style>
+@page { size: A4; margin: 18mm 16mm; }
+body { font-family: "Times New Roman", Georgia, serif; font-size: 11.5pt; line-height: 1.45; color: #111; }
+h1 { font-size: 22pt; margin: 0 0 6pt; }
+h2 { font-size: 15pt; border-bottom: 1.5px solid #2c4a3a; padding-bottom: 3pt; margin-top: 22pt; color: #2c4a3a; page-break-after: avoid; }
+h3 { font-size: 12.5pt; margin: 14pt 0 4pt; page-break-after: avoid; }
+table { border-collapse: collapse; width: 100%; margin: 6pt 0 10pt; font-size: 10pt; page-break-inside: auto; }
+tr { page-break-inside: avoid; }
+th, td { border: 1px solid #999; padding: 3pt 5pt; text-align: left; vertical-align: top; }
+th { background: #e6eee9; }
+pre { background: #f4f4f4; border: 1px solid #ddd; padding: 6pt 8pt; font-size: 8.6pt; line-height: 1.3; white-space: pre-wrap; page-break-inside: avoid; font-family: Menlo, Consolas, monospace; }
+code { font-family: Menlo, Consolas, monospace; font-size: 9.5pt; }
+img { max-width: 100%; display: block; margin: 6pt auto; border: 1px solid #ccc; }
+figure { margin: 8pt 0; page-break-inside: avoid; }
+figcaption { text-align: center; font-size: 9.5pt; font-style: italic; }
+.cover { text-align: center; padding-top: 70mm; page-break-after: always; }
+.cover h1 { font-size: 30pt; color: #2c4a3a; }
+.cover .sub { font-size: 14pt; margin: 6pt 0 40pt; }
+.cover table { width: 70%; margin: 0 auto; font-size: 11.5pt; }
+.pb { page-break-before: always; }
+.pass { color: #1a6b2e; font-weight: bold; } .nr { color: #a05a00; font-weight: bold; }
+ol.toc li { margin: 2pt 0; }
+</style></head><body>
+
+<div class="cover">
+  <div style="font-size:13pt">Department of Computer Science and Engineering</div>
+  <div style="font-size:13pt;margin-bottom:30pt">DBMS Experiential Learning – Level 3 Project</div>
+  <h1>EcoBuild Exchange</h1>
+  <div class="sub">A Green Building-Material Advisor and Circular Furniture Marketplace<br>PostgreSQL + MongoDB + Next.js</div>
+  <table>
+    <tr><th>Team member</th><th>SRN</th></tr>
+    <tr><td>Name 1</td><td>SRN</td></tr>
+    <tr><td>Name 2</td><td>SRN</td></tr>
+  </table>
+  <p style="margin-top:24pt">Section: ____ &nbsp;&nbsp; Course instructor: ____________</p>
+  <p>GitHub: https://github.com/codenoww/ecobuild-exchange-dbms-</p>
+</div>
+
+<h2 style="margin-top:0">Contents</h2>
+<ol class="toc">
+<li>Objectives</li><li>Functional Requirements</li><li>ER Diagram</li><li>Relational Schema</li>
+<li>Database Choice and Justification</li><li>Data Dictionary</li><li>SQL Implementation</li>
+<li>NoSQL (MongoDB) Implementation</li><li>Advanced Database Features</li><li>Important Queries</li>
+<li>Data Validation and Integrity</li><li>System Architecture</li><li>Authentication and Authorization</li>
+<li>Application Screenshots</li><li>Testing Results</li><li>Individual Contributions</li><li>Conclusion</li>
+</ol>
+
+<h2>1. Objectives</h2>
+<p>Buildings account for a large share of global CO2 emissions, much of it embodied in materials such as Portland cement, fired clay brick and virgin steel. People renovating or building usually have no easy way to compare greener alternatives on carbon, cost and local availability. Separately, used furniture is often discarded instead of being resold or recycled.</p>
+<p>EcoBuild Exchange addresses both problems:</p>
+<ul>
+<li>Recommend <b>eco-friendly alternatives</b> to traditional building materials, ranked by CO2 reduction, sustainability score and cost difference, using cited carbon data.</li>
+<li>Show <b>real vendor prices</b> for those materials, collected from Indian supplier marketplaces (IndiaMART, TradeIndia).</li>
+<li>Let users plan <b>projects</b> and automatically compute the CO2 saved and total cost.</li>
+<li>Run a <b>circular furniture marketplace</b> with safe purchasing and an automatic <b>90-day junkyard referral</b> rule so unsold items are recycled.</li>
+<li>Show sound database design: normalised relational schema, integrity constraints, advanced SQL features and a NoSQL ingestion layer for messy external data.</li>
+</ul>
+
+<h2>2. Functional Requirements</h2>
+<table>
+<tr><th>ID</th><th>Requirement</th><th>Role</th></tr>
+<tr><td>FR1</td><td>Register with name, email, password and role (BuyerSeller or Vendor); log in and log out.</td><td>All</td></tr>
+<tr><td>FR2</td><td>Browse traditional materials and their green alternatives with CO2 reduction %, cost delta % and best vendor price; search materials by name or synonym.</td><td>All</td></tr>
+<tr><td>FR3</td><td>View ranked recommendations (best alternative per traditional material).</td><td>All</td></tr>
+<tr><td>FR4</td><td>Create building projects and add green materials with quantities.</td><td>BuyerSeller</td></tr>
+<tr><td>FR5</td><td>Automatically compute each project's CO2 saved and total cost whenever its materials change.</td><td>System (trigger)</td></tr>
+<tr><td>FR6</td><td>Post furniture listings (title, category, condition, price); full-text search listings.</td><td>BuyerSeller</td></tr>
+<tr><td>FR7</td><td>Buy a listing atomically; a listing can never be sold twice.</td><td>BuyerSeller</td></tr>
+<tr><td>FR8</td><td>Vendors manage their own material price listings.</td><td>Vendor</td></tr>
+<tr><td>FR9</td><td>Admin dashboard with system overview; run the 90-day sweep that refers expired listings to a junkyard.</td><td>Admin</td></tr>
+<tr><td>FR10</td><td>Ingest raw vendor and junkyard data into MongoDB, aggregate it, and normalise valid records into PostgreSQL.</td><td>System (pipeline)</td></tr>
+</table>
+<p><b>Non-functional:</b> passwords stored as bcrypt hashes; DB credentials and JWT secret from environment variables only; role checks enforced on the server; integrity enforced by database constraints, not only by the UI.</p>
+
+<h2 class="pb">3. ER Diagram</h2>
+<p>The conceptual model (Chen notation) has these main entities: Role, User, Traditional Material, Green Material, Vendor, Project, Carbon Report, Furniture Listing, Furniture Transaction and Junkyard. Key relationships:</p>
+<ul>
+<li>Role <b>1:N</b> User. User <b>1:N</b> Project. User <b>1:N</b> Furniture Listing (as seller).</li>
+<li>Traditional Material <b>M:N</b> Green Material, through <i>Material Alternative</i> (attributes: co2_reduction_pct, cost_delta_pct).</li>
+<li>Vendor <b>M:N</b> Green Material, through <i>Vendor Listing</i> (price, url, last_synced).</li>
+<li>Project <b>M:N</b> Green Material, through <i>Project Material</i> (quantity). Project <b>1:N</b> Carbon Report.</li>
+<li>Furniture Listing <b>1:N</b> Transaction (buyer = User). Furniture Listing <b>M:N</b> Junkyard, through <i>Junkyard Referral</i>.</li>
+</ul>
+<figure><img src="../database/diagrams/chen_er_diagram.svg"><figcaption>Figure 1. ER diagram (Chen notation)</figcaption></figure>
+
+<h2 class="pb">4. Relational Schema</h2>
+<p>The ER model maps to 14 relations. M:N relationships become junction tables (<code>material_alternatives</code>, <code>vendor_listings</code>, <code>project_materials</code>, <code>junkyard_referrals</code>). The schema is in 3NF: every non-key attribute depends only on the key. For example, vendor details live in <code>vendors</code> and are not repeated per listing.</p>
+<figure><img src="../database/diagrams/relational_schema_diagram.png"><figcaption>Figure 2. Relational schema</figcaption></figure>
+<figure><img src="../database/diagrams/crowsfoot_schema_diagram.png"><figcaption>Figure 3. Crow's-foot schema diagram</figcaption></figure>
+
+<h2>5. Database Choice and Justification</h2>
+<table>
+<tr><th>Data</th><th>Database</th><th>Why</th></tr>
+<tr><td>Users, roles, projects, materials, alternatives, marketplace listings, transactions, referrals</td><td><b>PostgreSQL</b></td><td>Highly relational data with clear entities and many-to-many links. Needs foreign keys, CHECK constraints and ACID transactions (a purchase must insert a transaction and mark the listing sold together). Triggers and procedures automate the carbon and junkyard rules. Built-in GIN full-text search and window functions serve search and ranking.</td></tr>
+<tr><td>Raw scraped vendor listings and junkyard contacts</td><td><b>MongoDB</b></td><td>External sources are heterogeneous: some listings have prices and others say "ask for quote", and units, MOQ, pack sizes and tags differ by site. A schemaless document store keeps the raw data unchanged and auditable, and its aggregation pipeline summarises it before cleaning. Only validated, normalised records move into PostgreSQL.</td></tr>
+</table>
+<p>A vector database was not used. The material data is small and structured, and a synonyms table with full-text search covers search needs.</p>
+
+<h2 class="pb">6. Data Dictionary</h2>
+<table>
+<tr><th>Table</th><th>Column</th><th>Type</th><th>Constraints / description</th></tr>
+<tr><td rowspan="2">roles</td><td>role_id</td><td>SERIAL</td><td>PK</td></tr>
+<tr><td>role_name</td><td>VARCHAR(30)</td><td>NOT NULL, UNIQUE, CHECK IN ('Admin','Vendor','BuyerSeller')</td></tr>
+<tr><td rowspan="6">users</td><td>user_id</td><td>SERIAL</td><td>PK</td></tr>
+<tr><td>role_id</td><td>INT</td><td>FK → roles, ON DELETE RESTRICT</td></tr>
+<tr><td>name</td><td>VARCHAR(100)</td><td>NOT NULL</td></tr>
+<tr><td>email</td><td>VARCHAR(150)</td><td>NOT NULL, UNIQUE</td></tr>
+<tr><td>password_hash</td><td>VARCHAR(255)</td><td>NOT NULL (bcrypt)</td></tr>
+<tr><td>created_at</td><td>TIMESTAMP</td><td>DEFAULT now</td></tr>
+<tr><td rowspan="5">traditional_materials</td><td>material_id</td><td>SERIAL</td><td>PK</td></tr>
+<tr><td>name</td><td>VARCHAR(100)</td><td>NOT NULL</td></tr>
+<tr><td>category</td><td>VARCHAR(50)</td><td>NOT NULL</td></tr>
+<tr><td>co2_per_unit</td><td>NUMERIC(10,4)</td><td>CHECK ≥ 0 (added by ALTER)</td></tr>
+<tr><td>co2_source</td><td>TEXT</td><td>citation</td></tr>
+<tr><td rowspan="7">green_materials</td><td>material_id</td><td>SERIAL</td><td>PK</td></tr>
+<tr><td>name, category</td><td>VARCHAR</td><td>NOT NULL</td></tr>
+<tr><td>co2_per_unit</td><td>NUMERIC(10,4)</td><td>NOT NULL, CHECK ≥ 0 (kg CO2e/kg)</td></tr>
+<tr><td>cost_per_unit</td><td>NUMERIC(10,2)</td><td>CHECK ≥ 0</td></tr>
+<tr><td>sustainability_score</td><td>NUMERIC(4,2)</td><td>CHECK 0–10</td></tr>
+<tr><td>data_quality</td><td>VARCHAR(12)</td><td>CHECK IN ('cited','derived','placeholder')</td></tr>
+<tr><td>co2_source</td><td>TEXT</td><td>citation</td></tr>
+<tr><td rowspan="5">material_alternatives</td><td>alt_id</td><td>SERIAL</td><td>PK</td></tr>
+<tr><td>traditional_material_id</td><td>INT</td><td>FK → traditional_materials, CASCADE</td></tr>
+<tr><td>green_material_id</td><td>INT</td><td>FK → green_materials, CASCADE; UNIQUE(traditional, green)</td></tr>
+<tr><td>co2_reduction_pct</td><td>NUMERIC(5,2)</td><td>NOT NULL, CHECK 0–100</td></tr>
+<tr><td>cost_delta_pct</td><td>NUMERIC(6,2)</td><td>% cost change vs traditional</td></tr>
+<tr><td rowspan="3">material_synonyms</td><td>synonym_id</td><td>SERIAL</td><td>PK</td></tr>
+<tr><td>term</td><td>VARCHAR(60)</td><td>NOT NULL; index on lower(term); UNIQUE(term, traditional_material_id)</td></tr>
+<tr><td>traditional_material_id</td><td>INT</td><td>FK → traditional_materials, CASCADE</td></tr>
+<tr><td rowspan="4">vendors</td><td>vendor_id</td><td>SERIAL</td><td>PK</td></tr>
+<tr><td>name</td><td>VARCHAR(100)</td><td>NOT NULL</td></tr>
+<tr><td>website, location</td><td>VARCHAR</td><td>optional</td></tr>
+<tr><td>owner_user_id</td><td>INT</td><td>FK → users, UNIQUE (migration 001)</td></tr>
+<tr><td rowspan="5">vendor_listings</td><td>listing_id</td><td>SERIAL</td><td>PK</td></tr>
+<tr><td>vendor_id</td><td>INT</td><td>FK → vendors, CASCADE</td></tr>
+<tr><td>material_id</td><td>INT</td><td>FK → green_materials, CASCADE</td></tr>
+<tr><td>price</td><td>NUMERIC(10,2)</td><td>NOT NULL, CHECK ≥ 0</td></tr>
+<tr><td>url, last_synced</td><td>VARCHAR / TIMESTAMP</td><td>source link; sync time</td></tr>
+<tr><td rowspan="5">projects</td><td>project_id</td><td>SERIAL</td><td>PK</td></tr>
+<tr><td>user_id</td><td>INT</td><td>FK → users, CASCADE</td></tr>
+<tr><td>title</td><td>VARCHAR(150)</td><td>NOT NULL</td></tr>
+<tr><td>style</td><td>VARCHAR(80)</td><td>optional</td></tr>
+<tr><td>budget</td><td>NUMERIC(12,2)</td><td>CHECK ≥ 0</td></tr>
+<tr><td rowspan="3">project_materials</td><td>project_id</td><td>INT</td><td>PK part, FK → projects</td></tr>
+<tr><td>material_id</td><td>INT</td><td>PK part, FK → green_materials</td></tr>
+<tr><td>quantity</td><td>NUMERIC(10,2)</td><td>NOT NULL, CHECK &gt; 0</td></tr>
+<tr><td rowspan="3">carbon_reports</td><td>report_id</td><td>SERIAL</td><td>PK</td></tr>
+<tr><td>project_id</td><td>INT</td><td>FK → projects</td></tr>
+<tr><td>total_co2_saved, total_cost</td><td>NUMERIC(12,2)</td><td>written by trigger</td></tr>
+<tr><td rowspan="6">furniture_listings</td><td>listing_id</td><td>SERIAL</td><td>PK</td></tr>
+<tr><td>seller_id</td><td>INT</td><td>FK → users</td></tr>
+<tr><td>title, category</td><td>VARCHAR</td><td>NOT NULL; GIN full-text index</td></tr>
+<tr><td>condition</td><td>VARCHAR(30)</td><td>CHECK IN ('New','Like New','Good','Fair','Poor')</td></tr>
+<tr><td>price</td><td>NUMERIC(10,2)</td><td>NOT NULL, CHECK ≥ 0</td></tr>
+<tr><td>status, posted_at</td><td>VARCHAR(20) / TIMESTAMP</td><td>CHECK IN ('Active','Sold','Expired','Referred'); indexed</td></tr>
+<tr><td rowspan="2">furniture_transactions</td><td>txn_id</td><td>SERIAL</td><td>PK</td></tr>
+<tr><td>listing_id, buyer_id, price, txn_date</td><td>INT, INT, NUMERIC, TIMESTAMP</td><td>FKs → furniture_listings, users; price ≥ 0</td></tr>
+<tr><td rowspan="2">junkyards</td><td>junkyard_id</td><td>SERIAL</td><td>PK</td></tr>
+<tr><td>name, location, accepted_categories, contact</td><td>VARCHAR</td><td>name NOT NULL</td></tr>
+<tr><td>junkyard_referrals</td><td>referral_id, listing_id, junkyard_id, referred_at</td><td>SERIAL, INT, INT, TIMESTAMP</td><td>PK; FKs → furniture_listings, junkyards</td></tr>
+</table>
+
+<h2 class="pb">7. SQL Implementation</h2>
+<h3>7.1 DDL – CREATE with keys and constraints (schema.sql)</h3>
+<pre>CREATE TABLE furniture_listings (
+    listing_id   SERIAL PRIMARY KEY,
+    seller_id    INT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    title        VARCHAR(150) NOT NULL,
+    category     VARCHAR(60) NOT NULL,
+    condition    VARCHAR(30) NOT NULL CHECK (condition IN ('New','Like New','Good','Fair','Poor')),
+    price        NUMERIC(10,2) NOT NULL CHECK (price >= 0),
+    status       VARCHAR(20) NOT NULL DEFAULT 'Active'
+        CHECK (status IN ('Active','Sold','Expired','Referred')),
+    posted_at    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE project_materials (
+    project_id   INT NOT NULL REFERENCES projects(project_id) ON DELETE CASCADE,
+    material_id  INT NOT NULL REFERENCES green_materials(material_id) ON DELETE CASCADE,
+    quantity     NUMERIC(10,2) NOT NULL CHECK (quantity > 0),
+    PRIMARY KEY (project_id, material_id)
+);</pre>
+<h3>7.2 Indexes</h3>
+<pre>CREATE INDEX idx_users_role            ON users(role_id);
+CREATE INDEX idx_vendor_listings_mat   ON vendor_listings(material_id);
+CREATE INDEX idx_project_materials_mat ON project_materials(material_id);
+CREATE INDEX idx_furniture_status      ON furniture_listings(status);
+CREATE INDEX idx_furniture_posted_at   ON furniture_listings(posted_at);
+CREATE INDEX idx_furniture_search      ON furniture_listings
+       USING GIN (to_tsvector('english', title || ' ' || category));
+CREATE UNIQUE INDEX idx_vendors_owner_user_id_unique ON vendors(owner_user_id);</pre>
+<h3>7.3 Views</h3>
+<pre>CREATE VIEW vendor_price_comparison AS
+SELECT gm.material_id, gm.name AS material_name, v.name AS vendor_name, vl.price, vl.url, vl.last_synced
+FROM vendor_listings vl
+JOIN green_materials gm ON gm.material_id = vl.material_id
+JOIN vendors v          ON v.vendor_id   = vl.vendor_id
+ORDER BY gm.material_id, vl.price ASC;
+
+CREATE VIEW listings_nearing_expiry AS
+SELECT listing_id, title, seller_id, posted_at, (posted_at + INTERVAL '90 days') AS expires_on, status
+FROM furniture_listings
+WHERE status = 'Active'
+  AND posted_at + INTERVAL '90 days' &lt;= CURRENT_TIMESTAMP + INTERVAL '7 days';</pre>
+<h3>7.4 ALTER and DROP (alter_demo.sql, materials_catalog.sql, migrations)</h3>
+<pre>ALTER TABLE furniture_listings ADD COLUMN view_count INT NOT NULL DEFAULT 0;
+ALTER TABLE vendors ALTER COLUMN location TYPE VARCHAR(200);
+ALTER TABLE furniture_listings ADD CONSTRAINT chk_view_count_nonneg CHECK (view_count >= 0);
+ALTER TABLE vendor_listings DROP COLUMN IF EXISTS is_live_synced;
+ALTER TABLE green_materials ALTER COLUMN co2_per_unit TYPE NUMERIC(10,4);
+ALTER TABLE green_materials ADD COLUMN IF NOT EXISTS data_quality VARCHAR(12) NOT NULL DEFAULT 'placeholder'
+      CHECK (data_quality IN ('cited','derived','placeholder'));
+ALTER TABLE vendors ADD COLUMN IF NOT EXISTS owner_user_id INT REFERENCES users(user_id);
+CREATE TABLE legacy_material_mapping (old_name VARCHAR(100), new_material_id INT);
+DROP TABLE IF EXISTS legacy_material_mapping;</pre>
+<h3>7.5 DML – INSERT, UPDATE, DELETE</h3>
+<pre>INSERT INTO projects (user_id, title, style, budget)
+VALUES ((SELECT user_id FROM users WHERE email = 'kavya.iyer@mail.com'), 'Rooftop Pergola', 'Modern', 150000.00)
+RETURNING project_id, title;
+
+UPDATE vendor_listings SET price = 7.00, last_synced = CURRENT_TIMESTAMP
+WHERE vendor_id = (SELECT vendor_id FROM vendors WHERE name = 'Verma Construction Company') AND material_id = 1;
+
+DELETE FROM vendor_listings
+WHERE vendor_id = (SELECT vendor_id FROM vendors WHERE name = 'Laxmi Bricks Co.') AND material_id = 1;</pre>
+
+<h2>8. NoSQL (MongoDB) Implementation</h2>
+<p><b>Database:</b> <code>ecobuild_exchange</code>. <b>Collections:</b> <code>raw_vendor_listings</code> (99 documents scraped from IndiaMART and TradeIndia) and <code>raw_junkyard_listings</code> (4 scrap and furniture buyers).</p>
+<h3>8.1 Document model</h3>
+<pre>{
+  "source_site": "tradeindia.com",
+  "source_url": "https://www.tradeindia.com/products/...-fly-ash-brick-8407590.html",
+  "product_name": "9x4x3 Inch Rectangular Solid Fly Ash Brick",
+  "price": 10, "currency": "INR", "unit": "Piece", "moq": 2500,
+  "seller_name": "Verma Construction Company", "seller_location": "Panipat, Haryana",
+  "scraped_at": "2026-10-23T18:35:00Z",
+  "raw_tags": ["fly ash brick", "construction material"]
+}</pre>
+<p>Fields are optional by design. <code>price</code> may be null ("ask for quote"), and <code>price_note</code>, <code>moq</code> and <code>pack_size</code> appear only on some sources.</p>
+<h3>8.2 Indexes</h3>
+<pre>raw_collection.create_index("source_site")
+raw_collection.create_index("seller_name")</pre>
+<h3>8.3 Aggregation pipeline</h3>
+<pre>pipeline = [
+  {"$group": {"_id": "$source_site",
+              "total_listings":  {"$sum": 1},
+              "priced_listings": {"$sum": {"$cond": [{"$ne": ["$price", None]}, 1, 0]}},
+              "avg_price":       {"$avg": "$price"}}},
+  {"$sort": {"total_listings": -1}}
+]</pre>
+<table><tr><th>Source</th><th>Total</th><th>Priced</th><th>Avg price (INR)</th></tr>
+<tr><td>IndiaMART</td><td>96</td><td>92</td><td>178.23</td></tr>
+<tr><td>TradeIndia</td><td>3</td><td>3</td><td>18,697.33</td></tr></table>
+<h3>8.4 Retrieval and normalisation strategy</h3>
+<ol>
+<li>Select documents with a non-null price.</li>
+<li>Match <code>product_name</code> to a canonical green material by keyword (e.g. "fly ash", "cseb", "bamboo", "hempcrete"). Reject excluded terms such as "machine" and "service".</li>
+<li>Normalise units (pieces/nos → piece, sq ft/sqft → sq_ft, ton → tonne) and reject listings whose unit doesn't match the material's expected unit.</li>
+<li>Generate SQL for <code>vendors</code> and <code>vendor_listings</code> (<code>real_vendor_data.sql</code>). Keep only Bengaluru junkyards (service area).</li>
+</ol>
+<p><b>Result:</b> 99 raw documents → 85 matched vendor listings in PostgreSQL. 4 junkyards → 2 retained.</p>
+
+<h2 class="pb">9. Advanced Database Features</h2>
+<table>
+<tr><th>#</th><th>Feature</th><th>Object</th><th>Purpose</th></tr>
+<tr><td>1</td><td>Views</td><td>vendor_price_comparison, listings_nearing_expiry, material_recommendations</td><td>Reusable price comparison, expiry warnings, ranking</td></tr>
+<tr><td>2</td><td>Indexing / Full-text search</td><td>idx_furniture_search (GIN on tsvector)</td><td>Fast keyword search of furniture listings</td></tr>
+<tr><td>3</td><td>Stored function</td><td>fn_calculate_carbon_savings(project_id)</td><td>Computes CO2 saved and cost; writes a carbon report</td></tr>
+<tr><td>4</td><td>Triggers</td><td>trg_recalc_carbon, trg_enforce_referral</td><td>Keep carbon reports in sync; guarantee every 'Referred' listing has a referral row</td></tr>
+<tr><td>5</td><td>Stored procedure</td><td>sp_refer_expired_listings()</td><td>90-day batch sweep to junkyards</td></tr>
+<tr><td>6</td><td>Transactions</td><td>sp_purchase_listing (SELECT … FOR UPDATE)</td><td>Atomic, race-free purchase</td></tr>
+<tr><td>7</td><td>Window function</td><td>RANK() OVER (PARTITION BY …)</td><td>Rank green alternatives per traditional material</td></tr>
+<tr><td>8</td><td>NoSQL aggregation</td><td>MongoDB $group/$sum/$avg/$sort</td><td>Summarise raw vendor data before normalisation</td></tr>
+</table>
+<h3>9.1 Stored function and trigger – carbon savings</h3>
+<pre>CREATE OR REPLACE FUNCTION fn_calculate_carbon_savings(p_project_id INT)
+RETURNS TABLE(co2_saved NUMERIC, cost NUMERIC) AS $$
+DECLARE v_co2_saved NUMERIC(12,2) := 0; v_total_cost NUMERIC(12,2) := 0;
+BEGIN
+  SELECT COALESCE(SUM(pm.quantity * (CASE WHEN ma.co2_reduction_pct &lt; 100
+           THEN (gm.co2_per_unit / (1 - ma.co2_reduction_pct/100.0)) - gm.co2_per_unit ELSE 0 END)), 0),
+         COALESCE(SUM(pm.quantity * gm.cost_per_unit), 0)
+  INTO v_co2_saved, v_total_cost
+  FROM project_materials pm
+  JOIN green_materials gm ON gm.material_id = pm.material_id
+  LEFT JOIN material_alternatives ma ON ma.green_material_id = gm.material_id
+  WHERE pm.project_id = p_project_id;
+  INSERT INTO carbon_reports (project_id, total_co2_saved, total_cost) VALUES (p_project_id, v_co2_saved, v_total_cost);
+  RETURN QUERY SELECT v_co2_saved, v_total_cost;
+END; $$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_recalc_carbon
+AFTER INSERT OR UPDATE OR DELETE ON project_materials
+FOR EACH ROW EXECUTE FUNCTION trg_fn_recalc_carbon();</pre>
+<h3>9.2 Integrity trigger – referral guard</h3>
+<pre>CREATE TRIGGER trg_enforce_referral
+AFTER UPDATE OF status ON furniture_listings
+FOR EACH ROW EXECUTE FUNCTION trg_fn_enforce_referral();
+-- if NEW.status = 'Referred' and no junkyard_referrals row exists, insert one</pre>
+<h3>9.3 Transaction – safe purchase</h3>
+<pre>CREATE OR REPLACE PROCEDURE sp_purchase_listing(p_listing_id INT, p_buyer_id INT, p_price NUMERIC)
+LANGUAGE plpgsql AS $$
+DECLARE v_status VARCHAR(20);
+BEGIN
+  SELECT status INTO v_status FROM furniture_listings WHERE listing_id = p_listing_id FOR UPDATE;
+  IF v_status IS NULL THEN RAISE EXCEPTION 'Listing % does not exist', p_listing_id;
+  ELSIF v_status &lt;&gt; 'Active' THEN RAISE EXCEPTION 'Listing % is not available (status: %)', p_listing_id, v_status;
+  END IF;
+  INSERT INTO furniture_transactions (listing_id, buyer_id, price) VALUES (p_listing_id, p_buyer_id, p_price);
+  UPDATE furniture_listings SET status = 'Sold' WHERE listing_id = p_listing_id;
+END; $$;</pre>
+<h3>9.4 Stored procedure – 90-day sweep</h3>
+<pre>CREATE OR REPLACE PROCEDURE sp_refer_expired_listings() LANGUAGE plpgsql AS $$
+DECLARE rec RECORD; v_junkyard_id INT;
+BEGIN
+  FOR rec IN SELECT listing_id FROM furniture_listings
+             WHERE status = 'Active' AND posted_at + INTERVAL '90 days' &lt;= CURRENT_TIMESTAMP LOOP
+    SELECT junkyard_id INTO v_junkyard_id FROM junkyards ORDER BY junkyard_id LIMIT 1;
+    INSERT INTO junkyard_referrals (listing_id, junkyard_id) VALUES (rec.listing_id, v_junkyard_id);
+    UPDATE furniture_listings SET status = 'Referred' WHERE listing_id = rec.listing_id;
+  END LOOP;
+END; $$;</pre>
+<h3>9.5 Window-function ranking view</h3>
+<pre>CREATE OR REPLACE VIEW material_recommendations AS
+SELECT tm.name AS traditional_material, gm.name AS green_material,
+       ROUND(0.5*ma.co2_reduction_pct + 0.3*gm.sustainability_score*10 - 0.2*COALESCE(ma.cost_delta_pct,0), 2) AS score,
+       RANK() OVER (PARTITION BY tm.material_id
+                    ORDER BY 0.5*ma.co2_reduction_pct + 0.3*gm.sustainability_score*10
+                           - 0.2*COALESCE(ma.cost_delta_pct,0) DESC) AS rank_within_material
+FROM material_alternatives ma
+JOIN traditional_materials tm ON tm.material_id = ma.traditional_material_id
+JOIN green_materials gm       ON gm.material_id = ma.green_material_id;</pre>
+
+<h2 class="pb">10. Important Queries</h2>
+<h3>Q1. JOIN – traditional material vs green alternative</h3>
+<pre>SELECT tm.name AS traditional_material, gm.name AS green_alternative,
+       ma.co2_reduction_pct, ma.cost_delta_pct, gm.sustainability_score
+FROM material_alternatives ma
+JOIN traditional_materials tm ON tm.material_id = ma.traditional_material_id
+JOIN green_materials gm       ON gm.material_id = ma.green_material_id
+ORDER BY ma.co2_reduction_pct DESC;</pre>
+<h3>Q2. GROUP BY + aggregates – materials per project</h3>
+<pre>SELECT p.title, u.name AS owner, SUM(pm.quantity) AS total_material_units,
+       COUNT(DISTINCT pm.material_id) AS distinct_materials_used
+FROM projects p JOIN users u ON u.user_id = p.user_id
+JOIN project_materials pm ON pm.project_id = p.project_id
+GROUP BY p.project_id, p.title, u.name ORDER BY total_material_units DESC;</pre>
+<h3>Q3. GROUP BY + HAVING – sellers with more than one active listing</h3>
+<pre>SELECT u.name, COUNT(*) AS active_listings
+FROM furniture_listings fl JOIN users u ON u.user_id = fl.seller_id
+WHERE fl.status = 'Active'
+GROUP BY u.user_id, u.name HAVING COUNT(*) > 1 ORDER BY active_listings DESC;</pre>
+<h3>Q4. Aggregates – vendor price statistics per material</h3>
+<pre>SELECT gm.name, ROUND(AVG(vl.price),2) AS avg_price, COUNT(vl.listing_id) AS vendor_count,
+       MIN(vl.price) AS lowest_price, MAX(vl.price) AS highest_price
+FROM green_materials gm LEFT JOIN vendor_listings vl ON vl.material_id = gm.material_id
+GROUP BY gm.material_id, gm.name ORDER BY avg_price DESC NULLS LAST;</pre>
+<h3>Q5. Subquery – projects saving more CO2 than average</h3>
+<pre>SELECT p.title, cr.total_co2_saved
+FROM projects p JOIN carbon_reports cr ON cr.project_id = p.project_id
+WHERE cr.total_co2_saved > (SELECT AVG(total_co2_saved) FROM carbon_reports)
+ORDER BY cr.total_co2_saved DESC;</pre>
+<h3>Q6. NOT IN subquery – unsold listings (junkyard candidates)</h3>
+<pre>SELECT listing_id, title, posted_at, status FROM furniture_listings
+WHERE listing_id NOT IN (SELECT listing_id FROM furniture_transactions)
+ORDER BY posted_at ASC;</pre>
+<h3>Q7. Full-text search (used by /api/furniture?q=)</h3>
+<pre>SELECT fl.listing_id, fl.title, fl.category, fl.condition, fl.price, fl.status, u.name AS seller_name,
+       (fl.posted_at + INTERVAL '90 days') AS expires_on
+FROM furniture_listings fl JOIN users u ON u.user_id = fl.seller_id
+WHERE ($1 = '' OR to_tsvector('english', fl.title || ' ' || fl.category) @@ plainto_tsquery('english', $1))
+ORDER BY (fl.status = 'Active') DESC, fl.posted_at DESC;</pre>
+<h3>Q8. Best recommendation per material</h3>
+<pre>SELECT traditional_material, green_material, score
+FROM material_recommendations WHERE rank_within_material = 1;</pre>
+
+<h2>11. Data Validation and Integrity</h2>
+<ul>
+<li><b>Domain constraints:</b> CHECK on prices (≥ 0), quantity (&gt; 0), percentages (0–100), sustainability score (0–10), and enumerated <code>status</code>, <code>condition</code>, <code>role_name</code> and <code>data_quality</code>.</li>
+<li><b>Entity integrity:</b> primary keys on every table, a composite PK on <code>project_materials</code>, UNIQUE email and UNIQUE (traditional, green) pair.</li>
+<li><b>Referential integrity:</b> foreign keys with CASCADE for dependent data and RESTRICT on <code>users.role_id</code> so a role in use can't be deleted.</li>
+<li><b>Business rules in the database:</b> <code>trg_enforce_referral</code> prevents a 'Referred' listing without a referral record. <code>sp_purchase_listing</code> locks the row and rejects non-Active listings, so double-selling is impossible. <code>trg_recalc_carbon</code> keeps derived totals consistent.</li>
+<li><b>Application layer:</b> parameterised queries (<code>$1</code>, <code>$2</code>) prevent SQL injection. API routes validate required fields and return 400, 401 or 403.</li>
+</ul>
+
+<h2 class="pb">12. System Architecture</h2>
+<pre style="font-size:9.5pt">
+ ┌──────────────────────────── Browser ─────────────────────────────┐
+ │ Next.js pages: /materials /marketplace /projects /vendor /admin  │
+ │                /login /register                                  │
+ └───────────────────────────────┬──────────────────────────────────┘
+                                 │ fetch (JSON, httpOnly JWT cookie)
+ ┌───────────────────────────────▼──────────────────────────────────┐
+ │ Next.js Route Handlers (app/api/*)                               │
+ │  auth: register/login/logout/session   lib/auth.js (bcrypt, JWT, │
+ │  materials, furniture(+buy), projects,      requireRole)          │
+ │  vendor/listings, admin/overview+sweep lib/db.js (pg Pool,       │
+ │                                             DATABASE_URL env)     │
+ └───────────────────────────────┬──────────────────────────────────┘
+                                 │ SQL (parameterised), CALL procedures
+ ┌───────────────────────────────▼──────────────────────────────────┐
+ │ PostgreSQL 16: 14 tables, views, GIN index, function, triggers,  │
+ │                procedures, ranking view                          │
+ └───────────────────────────────▲──────────────────────────────────┘
+                                 │ real_vendor_data.sql (normalised)
+ ┌───────────────────────────────┴──────────────────────────────────┐
+ │ vendor_sync.py: load → aggregate → match → normalise → emit SQL  │
+ └───────────────────────────────▲──────────────────────────────────┘
+                                 │
+ ┌───────────────────────────────┴──────────────────────────────────┐
+ │ MongoDB: raw_vendor_listings, raw_junkyard_listings              │
+ │   ← JSON scraped from IndiaMART / TradeIndia / business listings │
+ └──────────────────────────────────────────────────────────────────┘</pre>
+<p>Credentials (<code>DATABASE_URL</code>, <code>JWT_SECRET</code>, <code>MONGO_URI</code>) are read only from environment variables. <code>.env.example</code> documents them, and real <code>.env</code> files are git-ignored.</p>
+
+<h2>13. Authentication and Authorization</h2>
+<ul>
+<li>Passwords are hashed with bcrypt (cost 12). Login issues a JWT (userId, name, role) stored in an httpOnly, SameSite=Lax cookie that expires after 7 days.</li>
+<li>Three roles: <b>Admin</b>, <b>Vendor</b> and <b>BuyerSeller</b>. Self-registration allows only Vendor and BuyerSeller. Admins are provisioned in the database.</li>
+<li>Server-side enforcement: <code>requireRole("Admin")</code> guards <code>/api/admin/*</code>. Vendor routes check <code>role === "Vendor"</code>. Project, buy and listing routes require a valid session (401 otherwise, 403 for the wrong role).</li>
+</ul>
+
+<h2 class="pb">14. Application Screenshots</h2>
+<figure><img src="screenshots/01-register.png" style="max-height:105mm"><figcaption>Figure 4. Registration with role selection</figcaption></figure>
+<figure><img src="screenshots/02-login.png" style="max-height:105mm"><figcaption>Figure 5. Login</figcaption></figure>
+<figure><img src="screenshots/03-materials.png"><figcaption>Figure 6. Green Material Advisor (alternatives, CO2 reduction, cost delta, best vendor price)</figcaption></figure>
+<figure><img src="screenshots/04-marketplace.png"><figcaption>Figure 7. Furniture marketplace with search and buy</figcaption></figure>
+
+<h2 class="pb">15. Testing Results</h2>
+<table>
+<tr><th>#</th><th>Test</th><th>Expected</th><th>Actual</th><th>Result</th></tr>
+<tr><td>T1</td><td>GET /api/admin/overview without session</td><td>401</td><td>401 returned</td><td class="pass">Pass</td></tr>
+<tr><td>T2</td><td>POST /api/admin/sweep without session</td><td>401</td><td>401 returned</td><td class="pass">Pass</td></tr>
+<tr><td>T3</td><td>Register twice with same email</td><td>409</td><td>409 Conflict, duplicate-email message</td><td class="pass">Pass</td></tr>
+<tr><td>T4</td><td>Login with wrong password</td><td>401</td><td>401, "Invalid credentials"</td><td class="pass">Pass</td></tr>
+<tr><td>T5</td><td>Admin API with BuyerSeller session</td><td>403</td><td>403 Forbidden</td><td class="pass">Pass</td></tr>
+<tr><td>T6</td><td>Buy listing 8 twice</td><td>2nd purchase rejected</td><td>400: "Listing 8 is not available (status: Sold)"</td><td class="pass">Pass</td></tr>
+<tr><td>T7</td><td>Add 10 units CSEB to a project</td><td>Trigger recalculates carbon report</td><td>total_co2_saved = 2.06, total_cost = 55.00</td><td class="pass">Pass</td></tr>
+<tr><td>T8</td><td>npm run build (projects feature)</td><td>Build succeeds</td><td>Build succeeded</td><td class="pass">Pass</td></tr>
+<tr><td>T9</td><td>npm run build (furniture search)</td><td>Build succeeds</td><td>Build succeeded</td><td class="pass">Pass</td></tr>
+<tr><td>T10</td><td>Admin 90-day sweep on listing older than 90 days</td><td>Listing → Referred</td><td>Not run</td><td class="nr">Not run</td></tr>
+<tr><td>T11</td><td>Sync excludes earth-block machine listings</td><td>Excluded</td><td>Not run</td><td class="nr">Not run</td></tr>
+<tr><td>T12</td><td>Sync excludes plain TMT rebar</td><td>Excluded</td><td>Not run</td><td class="nr">Not run</td></tr>
+</table>
+<p>Source: <code>docs/testing_log.md</code>. T10–T12 should be run and updated before the demo.</p>
+
+<h2>16. Individual Contributions</h2>
+<table>
+<tr><th>Member</th><th>Database work</th><th>Application work</th></tr>
+<tr><td>Name 1 (SRN)</td><td>____________________</td><td>____________________</td></tr>
+<tr><td>Name 2 (SRN)</td><td>____________________</td><td>____________________</td></tr>
+</table>
+
+<h2>17. Conclusion</h2>
+<p>EcoBuild Exchange goes beyond CRUD by putting the project's core logic in the database. Triggers keep carbon reports consistent, a locked transaction prevents double sales, a stored procedure automates the 90-day circular-economy rule, and a window-function view ranks green alternatives. PostgreSQL handles the structured, relational and transactional data. MongoDB holds heterogeneous scraped supplier data whose structure varies by source, and its aggregation pipeline feeds a cleaning step into SQL. The Next.js application uses all of this through an authenticated, role-checked API layer with no hard-coded credentials.</p>
+<p><b>Limitations and future work:</b> scheduled live scraping instead of seed snapshots; more cited CO2 values (some are still placeholders); pg_cron for the 90-day sweep; nearest-junkyard matching by location and category; and semantic (vector) search over material descriptions.</p>
+
+</body></html>

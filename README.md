@@ -1,100 +1,197 @@
-# EcoBuild Exchange — DBMS Level 3 Project
+# EcoBuild Exchange
 
-A sustainable-material advisor combined with a circular furniture resale marketplace, built for the DBMS Experiential Learning Level 3 project.
+**DBMS Experiential Learning – Level 3 Project**
 
-- **Green material advisor** — describe what you want to build, get eco-friendly material alternatives with carbon footprint and cost comparisons, plus where to buy them.
-- **Furniture resale marketplace** — buy/sell secondhand furniture, with an automated 90-day junkyard-referral rule for unsold listings.
+EcoBuild Exchange combines two tools for sustainable building:
 
-## Status
+1. **Green Material Advisor.** Pick a traditional building material (Portland cement, red clay brick, virgin PVC flooring and others) and see ranked eco-friendly alternatives with CO2 reduction, cost difference and the cheapest real vendor price.
+2. **Circular Furniture Marketplace.** Buy and sell second-hand furniture. Listings left unsold for 90 days are referred to a local junkyard or scrap buyer automatically, so items are reused instead of thrown away.
 
-Database design phase is complete and verified against a live PostgreSQL instance (per the course's 60–70% database-weight requirement, this was built DB-first before any UI work). A minimal Next.js frontend now exists, wired to the live database and the advanced SQL features, kept intentionally basic since the database layer is this project's primary focus.
+| Layer | Technology |
+|---|---|
+| Frontend | Next.js 14 (App Router), React 18 |
+| Backend / API | Next.js Route Handlers (`frontend/app/api`) |
+| SQL database | PostgreSQL 16 (14 core tables) |
+| NoSQL database | MongoDB (raw vendor and junkyard listings) |
+| Auth | bcrypt password hashing and JWT in an httpOnly cookie |
+| Version control | Git + GitHub |
 
-## What's in this repo so far
+---
+
+## Features
+
+- **Material advisor**: green alternatives ranked by a weighted score (CO2, sustainability, cost) using a SQL window function.
+- **Vendor price comparison**: 85 real supplier listings from IndiaMART and TradeIndia, ingested through MongoDB.
+- **Projects**: users add materials to a building project. A trigger recalculates the project's carbon report on every change.
+- **Marketplace**: browse and search furniture with full-text search, and buy through a transaction-safe stored procedure.
+- **90-day junkyard rule**: an Admin sweep calls a stored procedure that refers expired listings to a junkyard.
+- **Role-based access**: Admin, Vendor and BuyerSeller roles, enforced in the backend.
+
+## Database highlights
+
+| Requirement | Where |
+|---|---|
+| ER diagram (Chen) | `database/diagrams/chen_er_diagram.svg` |
+| Relational schema | `database/diagrams/relational_schema_diagram.png`, `crowsfoot_schema_diagram.png` |
+| DDL: CREATE, PK/FK, CHECK, UNIQUE, indexes, views | `database/schema.sql` |
+| ALTER / DROP | `database/alter_demo.sql`, `database/materials_catalog.sql`, `database/migrations/001_vendor_owner.sql` |
+| DML: INSERT, UPDATE, DELETE, SELECT, JOIN, GROUP BY, HAVING, subqueries | `database/dml_queries.sql` |
+| Stored function, triggers, stored procedures, transactions | `database/advanced_features.sql` |
+| Window-function ranking view | `database/recommendation_ranking.sql` |
+| GIN full-text index | `database/schema.sql` (`idx_furniture_search`) |
+| NoSQL data model and aggregation | `database/nosql/DATA_MODEL.md`, `database/nosql/vendor_sync.py` |
+
+**Advanced SQL features (6):** views, GIN full-text index, stored function `fn_calculate_carbon_savings`, triggers `trg_recalc_carbon` and `trg_enforce_referral`, stored procedures `sp_refer_expired_listings` and `sp_purchase_listing` (a row-locked transaction), and a `RANK()` window-function view.
+**NoSQL feature:** MongoDB `$group` / `$sum` / `$avg` / `$sort` aggregation pipeline over raw vendor listings.
+
+---
+
+## Project structure
 
 ```
 database/
-  schema.sql                                 -- full DDL, executed successfully on PostgreSQL 16
-  seed_data.sql                               -- realistic seed data for all 14 tables, FK-safe insert order
-  dml_queries.sql                             -- INSERT/UPDATE/DELETE/SELECT + JOIN/GROUP BY/HAVING/ORDER BY/aggregates/subqueries, all verified against live data
-  alter_demo.sql                              -- ALTER TABLE (add/drop column, widen type, add constraint) + a real DROP TABLE example
-  materials_catalog.sql                       -- sourced CO2 values (kg CO2e/kg) with data_quality flags, extra materials/alternatives, synonyms table for search; run after recommendation_ranking.sql
-  recommendation_ranking.sql                  -- material_recommendations view: scores and ranks alternatives (window function); run after advanced_features.sql
-  advanced_features.sql                       -- stored function, 2 triggers, 2 stored procedures — all tested live against the running DB
-  real_vendor_data.sql                        -- auto-generated by nosql/vendor_sync.py; replaces synthetic vendor rows with real web-sourced ones
-  nosql/
-    raw_vendor_listings_seed.json             -- 99 real product listings scraped from IndiaMART/TradeIndia (fly ash, bamboo flooring, CSEB, hempcrete, TMT rebar)
-    raw_junkyard_listings_seed.json           -- 4 real scrap/furniture buyers (2 in Bengaluru, 2 outside the service area)
-    vendor_sync.py                            -- MongoDB ingest + aggregation + normalization pipeline (raw NoSQL -> clean SQL)
-    README.md                                 -- how the NoSQL layer works and how to run it
-  diagrams/
-    chen_er_diagram.svg                      -- conceptual ER model (Chen notation: entities, relationships, 1/M/N cardinality)
-    relational_schema_diagram.svg/.png       -- textbook-style relation schema (Elmasri/Navathe format, matches course convention)
-    crowsfoot_schema_diagram.svg/.png        -- alternate crow's-foot style schema diagram
-docs/
-  DBMS_Level_3_Project_Requirements.pdf      -- the current official requirements doc this project is being built against
+  schema.sql                  DDL: 14 tables, constraints, indexes, 2 views
+  seed_data.sql               sample data for every table
+  real_vendor_data.sql        real vendor listings (generated by vendor_sync.py)
+  advanced_features.sql       function, triggers, procedures, transaction
+  recommendation_ranking.sql  material_recommendations view (RANK window)
+  materials_catalog.sql       sourced CO2 values, synonyms table, ALTERs
+  dml_queries.sql             demonstration queries
+  alter_demo.sql              ALTER / DROP demonstration
+  migrations/                 incremental schema changes
+  diagrams/                   ER and relational schema diagrams
+  nosql/                      MongoDB data model, seed JSON, sync pipeline
 frontend/
-  lib/db.js, lib/auth.js                     -- pg connection pool + bcrypt/JWT session auth, both reading config from env (no hardcoded credentials)
-  app/api/                                    -- route handlers: auth (register/login/logout/session), materials, furniture (+ buy), projects
-  app/{materials,marketplace,projects,login,register}/page.js  -- minimal pages (plain CSS, no component library)
+  app/                        pages: materials, marketplace, projects, vendor, admin, login, register
+  app/api/                    route handlers: auth, materials, furniture, projects, vendor, admin
+  lib/db.js                   PostgreSQL pool (reads DATABASE_URL)
+  lib/auth.js                 bcrypt, JWT session and requireRole()
+docs/
+  screenshots/                application screenshots
+  testing_log.md              test cases and results
+  DBMS_Level_3_Project_Requirements.pdf
 ```
 
-**Full project documentation** (objectives, functional requirements, database choice justification, data dictionary, system architecture, testing results, conclusion): see the `docs/` folder (PDF added at submission).
+---
 
-### Current schema (14 tables, PostgreSQL)
-`roles, users, projects, green_materials, traditional_materials, material_alternatives, vendors, vendor_listings, project_materials, carbon_reports, furniture_listings, furniture_transactions, junkyards, junkyard_referrals`
+## Setup and execution
 
-Includes: PK/FK constraints, CHECK constraints, 6 indexes (incl. a GIN full-text index), and 2 views (`vendor_price_comparison`, `listings_nearing_expiry`).
+### Prerequisites
 
-## Requirements this project targets (per docs/DBMS_Level_3_Project_Requirements.pdf)
+- Node.js 18 or newer, and npm
+- PostgreSQL 14 or newer (tested on 16)
+- Python 3.10 or newer (only to re-run the NoSQL sync)
+- MongoDB (optional: the sync script falls back to in-memory `mongomock`)
 
-- Database stack: **SQL (PostgreSQL, mandatory) + one of NoSQL or Vector DB** — the design uses PostgreSQL + MongoDB (raw vendor and junkyard listings), which satisfies the "2+ paradigms" rule. No vector database is used.
-- **≥4 advanced SQL features + ≥1 NoSQL/Vector feature** — planned: triggers (90-day junkyard automation), stored procedure (carbon savings calc), views (already in schema), GIN full-text index, window-function ranking view, MongoDB aggregation.
-- Next.js frontend — ✅ done, see `frontend/`, kept intentionally minimal/basic since the DB layer is this project's primary focus.
-- Backend-enforced auth, role-based access (≥2 roles — currently: Admin / Vendor / BuyerSeller) — ✅ done, see `frontend/lib/auth.js` + `frontend/app/api/auth/`. Self-registration is restricted to Vendor/BuyerSeller; Admin accounts are provisioned separately.
-- No hardcoded credentials — environment variables for DB config — ✅ done, see `frontend/.env.example` (`DATABASE_URL`, `JWT_SECRET`).
+### 1. Clone
 
-## Next steps
-
-1. ~~Seed data + DML queries (JOIN, GROUP BY, HAVING, subqueries)~~ ✅ done — see `database/seed_data.sql` and `database/dml_queries.sql`
-2. ~~NoSQL layer: vendor data sync pipeline~~ ✅ done — see `database/nosql/`. Real listings collected as a snapshot (24 Oct 2026) from IndiaMART/TradeIndia, loaded into MongoDB (mongomock for local dev), aggregated, normalized, and synced into `vendor_listings`/`vendors` (this satisfies the NoSQL aggregation advanced feature)
-3. ~~Advanced SQL features~~ ✅ done — see `database/advanced_features.sql`, all tested live:
-   - Views (`schema.sql`) + GIN full-text index (`schema.sql`)
-   - Stored function `fn_calculate_carbon_savings` — computes CO2 saved + cost for a project
-   - Trigger `trg_recalc_carbon` — auto-recalculates `carbon_reports` whenever a project's materials change
-   - Trigger `trg_enforce_referral` — auto-creates a `junkyard_referrals` row if a listing's status is ever set to `Referred` without one
-   - Stored procedure `sp_refer_expired_listings` — the actual 90-day batch sweep, meant to run on a schedule
-   - Stored procedure `sp_purchase_listing` — transaction-safe marketplace purchase (row-locked, all-or-nothing)
-
-   That's 4+ distinct SQL advanced features (views, indexing, stored functions, triggers) plus transactions as a bonus, alongside the NoSQL aggregation — requirement met.
-4. ~~Minimal Next.js interface + API routes, backend auth with role-based access (≥2 roles)~~ ✅ done — see `frontend/`. Material advisor page, marketplace with a working buy flow (calls `sp_purchase_listing`), and a projects page that surfaces the trigger-generated carbon reports. Verified end-to-end (build + live run) against the real Postgres instance.
-5. Documentation package: objectives, functional requirements, database choice justification, data dictionary, system architecture, screenshots, testing results, conclusion — mostly done (see the documentation link above); "Application screenshots" section still needs real screenshots now that the frontend exists.
-
-## Loading the database
-
-Run these in order against an empty `ecobuild_exchange` database:
-
-```
-database/schema.sql
-database/seed_data.sql
-database/real_vendor_data.sql
-database/advanced_features.sql
-database/recommendation_ranking.sql
-database/materials_catalog.sql
-database/migrations/001_vendor_owner.sql   # once the vendor page PR is merged
+```bash
+git clone https://github.com/codenoww/ecobuild-exchange-dbms-.git
+cd ecobuild-exchange-dbms-
 ```
 
-## Running the frontend
+### 2. Create and load the PostgreSQL database
 
+```bash
+createdb ecobuild_exchange
+psql -d ecobuild_exchange -f database/schema.sql
+psql -d ecobuild_exchange -f database/seed_data.sql
+psql -d ecobuild_exchange -f database/real_vendor_data.sql
+psql -d ecobuild_exchange -f database/advanced_features.sql
+psql -d ecobuild_exchange -f database/recommendation_ranking.sql
+psql -d ecobuild_exchange -f database/materials_catalog.sql
+psql -d ecobuild_exchange -f database/migrations/001_vendor_owner.sql
 ```
+
+Run them in this order. Each file depends on the ones before it.
+
+Optional demonstrations:
+
+```bash
+psql -d ecobuild_exchange -f database/dml_queries.sql
+psql -d ecobuild_exchange -f database/alter_demo.sql
+```
+
+### 3. (Optional) Re-run the MongoDB sync pipeline
+
+```bash
+pip install -r database/nosql/requirements.txt
+python3 database/nosql/vendor_sync.py
+```
+
+Without `MONGO_URI` set, it uses `mongomock`. To use a real MongoDB instance, set `export MONGO_URI="mongodb://localhost:27017/ecobuild_exchange"` first. The script regenerates `database/real_vendor_data.sql`.
+
+### 4. Configure environment variables
+
+```bash
 cd frontend
-cp .env.example .env.local   # fill in DATABASE_URL and a real JWT_SECRET
-npm install
-npm run dev                  # or: npm run build && npm run start
+cp .env.example .env.local
 ```
+
+Edit `.env.local`:
+
+```
+DATABASE_URL=postgresql://postgres:<password>@localhost:5432/ecobuild_exchange
+JWT_SECRET=<a long random string>
+```
+
+No credentials are hard-coded. `lib/db.js` and `lib/auth.js` refuse to start if these are missing.
+
+### 5. Run the web app
+
+```bash
+npm install
+npm run dev
+```
+
+Open http://localhost:3000.
+
+For a production build: `npm run build && npm run start`.
+
+### 6. Using the app
+
+| Role | How to get it | Can access |
+|---|---|---|
+| BuyerSeller | Register at `/register` | Materials, Marketplace (buy/sell), My Projects |
+| Vendor | Register at `/register` with role Vendor | Materials, Vendor dashboard (`/vendor`) |
+| Admin | Provisioned directly in the database (not self-registrable) | Admin dashboard (`/admin`), 90-day sweep |
+
+To make an existing user an Admin:
+
+```sql
+UPDATE users SET role_id = (SELECT role_id FROM roles WHERE role_name = 'Admin')
+WHERE email = 'you@example.com';
+```
+
+---
+
+## API overview
+
+| Method | Route | Auth |
+|---|---|---|
+| POST | `/api/auth/register`, `/api/auth/login`, `/api/auth/logout` | public |
+| GET | `/api/auth/session` | public |
+| GET | `/api/materials` | public |
+| GET | `/api/furniture?q=` | public |
+| POST | `/api/furniture` (create listing) | logged in |
+| POST | `/api/furniture/[id]/buy` | logged in |
+| GET/POST | `/api/projects`, `/api/projects/[id]/materials` | logged in |
+| GET/POST | `/api/vendor/listings` | Vendor |
+| GET | `/api/admin/overview` | Admin |
+| POST | `/api/admin/sweep` | Admin |
+
+## Testing
+
+See `docs/testing_log.md` for test cases and results: auth 401/403 checks, duplicate email, wrong password, double purchase, carbon trigger and production builds.
 
 ## Data provenance
 
-- **CO2 values** are kg CO2e per kg, cradle to gate. Each green material and alternative pair carries a `data_quality` flag: `cited` (published source, named in `co2_source`), `derived` (calculated from a published relation) or `placeholder` (not yet sourced). Sources used so far: MPA Fact Sheet 18 (cement), the ICE database via the ICE v3.0 appendix and the HKUST ECO-CM database (brick, rebar, plywood, PVC, glass), and Max Fordham / Build Up Nepal 2021 (earth blocks). Cost changes and the sustainability score are not sourced.
+- **Real:** vendor names, prices and URLs (snapshot of IndiaMART and TradeIndia, Oct 2026), junkyard contacts, and cited CO2 values (ICE database, MPA, HKUST ECO-CM).
+- **Synthetic:** users, projects, furniture listings and transactions (demo data).
 
-- **Synthetic (seed data):** users, projects, furniture listings/transactions, junkyards — there's no real user base yet, so this is realistic placeholder data for demoing the schema.
-- **Real, web-sourced:** vendor/material pricing (`database/nosql/`) — collected as a snapshot from real supplier listings on IndiaMART and TradeIndia, not fabricated. See `database/nosql/README.md` for the full pipeline.
+## Team
+
+| Member | SRN | Responsibilities |
+|---|---|---|
+| _Name 1_ | _SRN_ | _e.g. schema design, advanced SQL, NoSQL pipeline_ |
+| _Name 2_ | _SRN_ | _e.g. Next.js UI, API routes, auth, testing_ |
