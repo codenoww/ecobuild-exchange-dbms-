@@ -34,8 +34,7 @@ ol.toc li { margin: 2pt 0; }
     <tr><td>Aryan Singh</td><td>PES1UG24CS086</td></tr>
     <tr><td>Anushka Kishore</td><td>PES1UG24CS074</td></tr>
   </table>
-  <p style="margin-top:24pt">Section: ____ &nbsp;&nbsp; Course instructor: ____________</p>
-  <p>GitHub: https://github.com/codenoww/ecobuild-exchange-dbms-</p>
+  <p style="margin-top:24pt">GitHub: https://github.com/codenoww/ecobuild-exchange-dbms-</p>
 </div>
 
 <h2 style="margin-top:0">Contents</h2>
@@ -44,7 +43,7 @@ ol.toc li { margin: 2pt 0; }
 <li>Database Choice and Justification</li><li>Data Dictionary</li><li>SQL Implementation</li>
 <li>NoSQL (MongoDB) Implementation</li><li>Advanced Database Features</li><li>Important Queries</li>
 <li>Data Validation and Integrity</li><li>System Architecture</li><li>Authentication and Authorization</li>
-<li>Application Screenshots</li><li>Testing Results</li><li>Individual Contributions</li><li>Conclusion</li>
+<li>Application Screenshots</li><li>Testing Results</li><li>Conclusion</li>
 </ol>
 
 <h2>1. Objectives</h2>
@@ -445,14 +444,7 @@ FROM material_recommendations WHERE rank_within_material = 1;</pre>
 </table>
 <p>Source: <code>docs/testing_log.md</code>. T10–T12 should be run and updated before the demo.</p>
 
-<h2>16. Individual Contributions</h2>
-<table>
-<tr><th>Member</th><th>Database work</th><th>Application work</th></tr>
-<tr><td>Aryan Singh (PES1UG24CS086)</td><td>____________________</td><td>____________________</td></tr>
-<tr><td>Anushka Kishore (PES1UG24CS074)</td><td>____________________</td><td>____________________</td></tr>
-</table>
-
-<h2>17. Conclusion</h2>
+<h2>16. Conclusion</h2>
 <p>EcoBuild Exchange goes beyond CRUD by putting the project's core logic in the database. Triggers keep carbon reports consistent, a locked transaction prevents double sales, a stored procedure automates the 90-day circular-economy rule, and a window-function view ranks green alternatives. PostgreSQL handles the structured, relational and transactional data. MongoDB holds heterogeneous scraped supplier data whose structure varies by source, and its aggregation pipeline feeds a cleaning step into SQL. The Next.js application uses all of this through an authenticated, role-checked API layer with no hard-coded credentials.</p>
 <p><b>Limitations and future work:</b> scheduled live scraping instead of seed snapshots; more cited CO2 values (some are still placeholders); pg_cron for the 90-day sweep; nearest-junkyard matching by location and category; and semantic (vector) search over material descriptions.</p>
 
